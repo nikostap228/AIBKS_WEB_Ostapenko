@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTB Downhill - Лента</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="profile-body">
+    <nav class="navbar">
+        <div class="logo-small">
+            <img src="mtb.png" alt="Logo">
+            <span>MTBFEED</span>
+        </div>
+        <div class="nav-links">
+            <a href="posts.html" class="active">Лента</a>
+            <a href="profile.html">Профиль</a>
+            <a href="index.html">Выход</a>
+        </div>
+    </nav>
+
+    <div class="posts-feed">
+        <div class="post-card">
+            <div class="post-card-header">
+                <img src="mtb2.png" alt="Avatar" class="post-card-avatar">
+                <div>
+                    <div class="post-card-user">Алексей Райдер</div>
+                    <div class="post-card-date">14 июня 2026</div>
+                </div>
+            </div>
+            <div class="post-card-title">Вечерний Кантерлот 🌅</div>
+            <img src="mtb3.png" alt="Post" class="post-card-image">
+            <div class="post-card-text">
+                Иногда самые спокойные вечера оказываются самыми запоминающимися. Сегодня закат на трассе был особенно красивым: мягкий свет, тишина улиц и ощущение, будто время немного замедлилось. 
+            </div>
+            <div class="post-card-actions">
+                <button class="action-btn" onclick="toggleLike(this)">❤️ Нравится</button>
+                <button class="action-btn">💬 Комментарий</button>
+                <button class="action-btn"> Поделиться</button>
+            </div>
+        </div>
+
+        <div class="post-card">
+            <div class="post-card-header">
+                <img src="mtb2.png" alt="Avatar" class="post-card-avatar">
+                <div>
+                    <div class="post-card-user">Мария Даунхилл</div>
+                    <div class="post-card-date">13 июня 2026</div>
+                </div>
+            </div>
+            <div class="post-card-title">Новый байк дня 🚵‍♀️</div>
+            <img src="bike.png" alt="Post" class="post-card-image">
+            <div class="post-card-text">
+                Наконец-то дождалась! Новый full-suspension байк для даунхила. Карбоновая рама, ход подвески 200мм, идеальная геометрия для скоростных спусков. Не могу дождаться первых заездов! 
+            </div>
+            <div class="post-card-actions">
+                <button class="action-btn" onclick="toggleLike(this)">❤️ Нравится</button>
+                <button class="action-btn">💬 Комментарий</button>
+                <button class="action-btn">🔗 Поделиться</button>
+            </div>
+        </div>
+
+        <div class="post-card">
+            <div class="post-card-header">
+                <img src="mtb2.png" alt="Avatar" class="post-card-avatar">
+                <div>
+                    <div class="post-card-user">Дмитрий Трейл</div>
+                    <div class="post-card-date">12 июня 2026</div>
+                </div>
+            </div>
+            <div class="post-card-title">Лесная трасса 🌲</div>
+            <img src="mtb2.png" alt="Post" class="post-card-image">
+            <div class="post-card-text">
+                Сегодняшний заезд по лесной трассе был просто огонь! Грязь, корни, крутые повороты — всё как мы любим. Лучший способ провести выходной. Кто со мной в следующий раз? 💪
+            </div>
+            <div class="post-card-actions">
+                <button class="action-btn" onclick="toggleLike(this)">❤️ Нравится</button>
+                <button class="action-btn">💬 Комментарий</button>
+                <button class="action-btn"> Поделиться</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLike(btn) {
+            btn.classList.toggle('liked');
+        }
+    </script>
+</body>
+</html>

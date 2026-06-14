@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTB Downhill - Профиль</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="profile-body">
+    <nav class="navbar">
+        <div class="logo-small">
+            <img src="mtb.png" alt="Logo">
+            <span>MTBFEED</span>
+        </div>
+        <div class="nav-links">
+            <a href="posts.html">Лента</a>
+            <a href="profile.html" class="active">Профиль</a>
+            <a href="index.html">Выход</a>
+        </div>
+    </nav>
+
+    <div class="profile-content">
+        <div class="profile-header">
+            <img src="mtb2.png" alt="Avatar" class="profile-avatar">
+            <div class="profile-info">
+                <h2>Остапенко Никита</h2>
+                <p>Downhill rider • MTB enthusiast 🚵‍️</p>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-num">24</div>
+                        <div class="stat-label">поста</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num">156</div>
+                        <div class="stat-label">подписчиков</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num">89</div>
+                        <div class="stat-label">подписок</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-edit">Редактировать</button>
+        </div>
+
+        <div class="post-create">
+            <h3>Создать новый пост ️</h3>
+            <input type="text" placeholder="Название поста">
+            <textarea placeholder="Опишите свой заезд..."></textarea>
+            <div class="file-upload">
+                <label for="fileInput">📎Добавить фото</label>
+                <input type="file" id="fileInput" accept="image/*">
+                <span class="file-name" id="fileName">Файл не выбран</span>
+            </div>
+            <button class="btn-publish" onclick="publishPost()">Опубликовать</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || 'Файл не выбран';
+            document.getElementById('fileName').textContent = fileName;
+        });
+
+        function publishPost() {
+            alert('Пост опубликован! 🎉');
+            window.location.href = 'posts.html';
+        }
+    </script>
+</body>
+</html>
