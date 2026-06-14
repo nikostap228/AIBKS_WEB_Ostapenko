@@ -13,7 +13,6 @@ $link = mysqli_connect('127.0.0.1', 'root', 'root', 'first');
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="index-page">
-    <!-- НАВИГАЦИОННОЕ МЕНЮ -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/index.php">MTB Community</a>
@@ -46,8 +45,7 @@ $link = mysqli_connect('127.0.0.1', 'root', 'root', 'first');
             </div>
         </div>
     </nav>
-    
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
+
     <div class="container mt-5">
         <div class="text-center mb-5">
             <h1 class="display-4 mb-3">Добро пожаловать 🚵</h1>

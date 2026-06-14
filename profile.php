@@ -1,7 +1,6 @@
 <?php
 require_once('db.php');
 
-// Проверка cookie
 if (!isset($_COOKIE['User'])) {
     header("Location: /login.php");
     exit();
@@ -12,36 +11,59 @@ if (!$link) {
     die("Ошибка подключения к БД: " . mysqli_connect_error());
 }
 
-// Обработка формы создания поста
+$username = $_COOKIE['User'];
+$user_sql = "SELECT id FROM users WHERE username='$username'";
+$user_result = mysqli_query($link, $user_sql);
+$current_user = mysqli_fetch_assoc($user_result);
+$current_user_id = $current_user['id'];
+
+
 if (isset($_POST['create_post'])) {
     $title = mysqli_real_escape_string($link, $_POST['postTitle']);
     $main_text = mysqli_real_escape_string($link, $_POST['postContent']);
     
     if ($title && $main_text) {
-        // Обработка загрузки файла
+
         $imageName = '';
         if (isset($_FILES['postImage']) && $_FILES['postImage']['error'] == 0) {
+            
+            // ⚠️ СЛАБАЯ ПРОВЕРКА: только по Content-Type (легко обойти!)
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $fileType = $_FILES['postImage']['type'];
+            
+            if (!in_array($fileType, $allowedTypes)) {
+                die("<script>alert('Error: только изображения'); window.history.back();</script>");
+            }
+            
+            // ❌ НЕТ проверки расширения файла
+            // ❌ НЕТ проверки getimagesize()
+            // ❌ НЕТ проверки содержимого
+            
             $uploadDir = __DIR__ . '/upload/';
             
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
             
-            $imageName = time() . '_' . basename($_FILES['postImage']['name']);
+            // Используем оригинальное имя файла (для наглядности)
+            $imageName = basename($_FILES['postImage']['name']);
             $uploadFile = $uploadDir . $imageName;
             
             if (move_uploaded_file($_FILES['postImage']['tmp_name'], $uploadFile)) {
-                // Файл загружен успешно
+                // Success!
+            } else {
+                die("<script>alert('Error при загрузке'); window.history.back();</script>");
             }
         }
-        
-        $sql = "INSERT INTO posts (title, main_text, image) VALUES ('$title', '$main_text', '$imageName')";
+
+        $sql = "INSERT INTO posts (user_id, title, main_text, image) VALUES ('$current_user_id', '$title', '$main_text', '$imageName')";
         
         if (mysqli_query($link, $sql)) {
-            header("Location: /profile.php");
+            // Успех!
+            echo "<script>alert('Success! Файл загружен'); window.location.href='/profile.php';</script>";
             exit();
         } else {
-            echo "<script>alert('Ошибка: " . mysqli_error($link) . "');</script>";
+            echo "<script>alert('Error: " . mysqli_error($link) . "');</script>";
         }
     }
 }
@@ -52,7 +74,7 @@ if (isset($_POST['create_post'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль - Остапенко Н.С.</title>
+    <title>Профиль - <?php echo htmlspecialchars($_COOKIE['User']); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -83,7 +105,6 @@ if (isset($_POST['create_post'])) {
     
     <div class="container mt-5">
         <div class="row">
-            <!-- Боковая панель с информацией -->
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
@@ -91,7 +112,7 @@ if (isset($_POST['create_post'])) {
                         <p class="text-muted">Downhill rider • MTB enthusiast 🚵‍️</p>
                         <div class="row mt-4">
                             <div class="col-4">
-                                <h5><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM posts")); ?></h5>
+                                <h5><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM posts WHERE user_id='$current_user_id'")); ?></h5>
                                 <small>поста</small>
                             </div>
                             <div class="col-4">
@@ -108,9 +129,7 @@ if (isset($_POST['create_post'])) {
                 </div>
             </div>
             
-            <!-- Основная часть с постами -->
             <div class="col-md-8">
-                <!-- Форма создания поста -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>Создать новый пост ✍️</h5>
@@ -132,10 +151,9 @@ if (isset($_POST['create_post'])) {
                     </div>
                 </div>
                 
-                <!-- Список постов -->
                 <h4 class="mb-3">Мои посты</h4>
                 <?php
-                $result = mysqli_query($link, "SELECT * FROM posts ORDER BY id DESC");
+                $result = mysqli_query($link, "SELECT * FROM posts WHERE user_id='$current_user_id' ORDER BY id DESC");
                 
                 if (mysqli_num_rows($result) > 0) {
                     while ($post = mysqli_fetch_assoc($result)) {

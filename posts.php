@@ -5,11 +5,14 @@ $link = mysqli_connect('127.0.0.1', 'root', 'root', 'first');
 
 $post = null;
 if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+    // УБРАЛИ intval() - уязвимо к SQL injection!
+    $id = $_GET['id'];
+    
+    // Уязвимый запрос
     $sql = "SELECT * FROM posts WHERE id=$id";
     $result = mysqli_query($link, $sql);
     
-    if (mysqli_num_rows($result) > 0) {
+    if ($result && mysqli_num_rows($result) > 0) {
         $post = mysqli_fetch_assoc($result);
     }
 }
@@ -20,7 +23,8 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $post ? htmlspecialchars($post['title']) : 'Пост'; ?></title>
+    <!-- УЯЗВИМО: выводим title без экранирования -->
+    <title><?php echo $post ? $post['title'] : 'Пост'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -51,16 +55,22 @@ if (isset($_GET['id'])) {
     </nav>
     
     <div class="container mt-5">
+        <!-- УЯЗВИМО: отражённый XSS через параметр id -->
+        <h4>Просмотр поста ID: <?php echo $_GET['id']; ?></h4>
+        
         <?php if ($post): ?>
         <div class="card">
             <div class="card-body">
-                <h1 class="card-title"><?php echo htmlspecialchars($post['title']); ?></h1>
+                <!-- УЯЗВИМО: выводим title без htmlspecialchars -->
+                <h1 class="card-title"><?php echo $post['title']; ?></h1>
                 
                 <?php if (!empty($post['image'])): ?>
-                <img src="upload/<?php echo htmlspecialchars($post['image']); ?>" class="img-fluid mb-4 rounded" alt="Post image">
+                <!-- УЯЗВИМО: выводим имя файла без экранирования -->
+                <img src="upload/<?php echo $post['image']; ?>" class="img-fluid mb-4 rounded" alt="Post image">
                 <?php endif; ?>
                 
-                <p class="card-text"><?php echo nl2br(htmlspecialchars($post['main_text'])); ?></p>
+                <!-- УЯЗВИМО: выводим текст без htmlspecialchars -->
+                <p class="card-text"><?php echo nl2br($post['main_text']); ?></p>
                 
                 <div class="mt-4">
                     <button class="btn btn-outline-danger me-2">❤️ Нравится</button>
